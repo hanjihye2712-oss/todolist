@@ -3,7 +3,7 @@
 ![스크린샷](images/확인용.png)
 ![스크린샷](images/tests_crud.png)
 
-## ★ 옵시디언 3번 viewcst★
+## ★ 옵시디언 3번 viewset★
 ![스크린샷](images/viewset.png)
 
 
