@@ -65,7 +65,7 @@ document.getElementById("todoCreate").addEventListener("click", async () => {
 
   try { // 에러가 발생할 수 있는 코드를 실행하는 영역
 
-    const res = await api.post("todo/api/create/", {
+    const res = await api.post("todo/viewsets/view/", {
       // Todo 생성 API로 POST 요청 전송
 
       name: document.getElementById("name").value,

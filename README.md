@@ -1,3 +1,14 @@
+## ★ 옵시디언 2번 CRUD ★
+![스크린샷](images/shell.png)
+![스크린샷](images/확인용.png)
+![스크린샷](images/tests_crud.png)
+
+## ★ 옵시디언 3번 viewcst★
+![스크린샷](images/viewset.png)
+
+
+---
+
 # 🚀 todoList_Django_to_DRF
 
 이 프로젝트는 Django 기반 Todo 애플리케이션을 시작으로
@@ -145,10 +156,3 @@ python manage.py runserver
 "실무 확장형 Django → DRF → AI → 비동기 구조 학습 프로젝트"입니다.
 
 ---
-
-## ★ 옵시디언 2번 ★
-![스크린샷](images/shell.png)
-![스크린샷](images/확인용.png)
-![스크린샷](images/tests_crud.png)
-
-## ★ 옵시디언 3번 ★
