@@ -5,7 +5,7 @@ from ..models import Todo
 
 class TodoListView(ListView):  # 제너릭뷰
     model = Todo
-    template_name = "todo/todo.html"  # 기본값: todo_list.html
+    template_name = "todo/list.html"
     context_object_name = "todos"  # 기본값: object_list
     ordering = ["-created_at"]
     success_url = reverse_lazy("todo:list")

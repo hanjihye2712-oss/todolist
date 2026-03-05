@@ -150,3 +150,5 @@ python manage.py runserver
 ![스크린샷](images/shell.png)
 ![스크린샷](images/확인용.png)
 ![스크린샷](images/tests_crud.png)
+
+## ★ 옵시디언 3번 ★
