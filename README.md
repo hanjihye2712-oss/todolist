@@ -145,4 +145,5 @@ python manage.py runserver
 "실무 확장형 Django → DRF → AI → 비동기 구조 학습 프로젝트"입니다.
 
 
+![확인용](images/확인용.png)
 ![스크린샷](images/shell.png)
