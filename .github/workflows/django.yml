@@ -28,12 +28,12 @@ jobs:
     - name: Run Migrations
       run: |
         python manage.py migrate --noinput
-      
+
     - name: Debug Info
       run: |
         python manage.py showmigrations todo
         python manage.py shell -c "from django.conf import settings; print('DATABASES =', settings.DATABASES)"
-     
+
     - name: Run Tests
       run: |
         python manage.py test --verbosity 2
