@@ -23,12 +23,6 @@ urlpatterns = [
     path("create/", TodoCreateView.as_view(), name="todo_create"),
     path("detail/<int:pk>/", TodoDetailView.as_view(), name="todo_Detail"),
     path("update/<int:pk>/", TodoUpdateView.as_view(), name="todo_Update"),
-    # api
-    #     path("api/list/", TodoListAPI.as_view(), name="todo_api_list"),
-    #     path("api/create/", TodoCreateAPI.as_view(), name="todo_api_create"),
-    #     path("api/retrieve/<int:pk>/", TodoRetrieveAPI.as_view(), name="todo_api_retrieve"),
-    #     path("api/update/<int:pk>/", TodoUpdateAPI.as_view(), name="todo_api_update"),
-    #     path("api/delete/<int:pk>/", TodoDeleteAPI.as_view(), name="todo_api_delete"),
     # Viewsets CRUD를 하나로 통일
     path("viewsets/", include(router.urls)),
     # 127.0.0.1:8000/todo/viewsets/view/
