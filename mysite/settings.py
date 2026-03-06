@@ -11,7 +11,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
 # SECRET_KEY = "django-insecure-5!*ys4%)&me7k8t!1yh#n7*6kl-fp#s)_!n$6x#$5fql9z&(1r"
-
+# 보안 향상, 코드 재사용, 환경 구분 가능
+env = environ.Env(DEBUG=(bool, False))
+# 환경변수
+environ.Env.read_env(os.path.join(BASE_DIR, ".env"))
+# SECURITY를 .env로 이동하여 보호
+SECRET_KEY = env("DJANGO_SECRET_KEY", default="django-insecure-dev-key")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
@@ -118,13 +123,3 @@ REST_FRAMEWORK = {
         "rest_framework.renderers.JSONRenderer",
     ],
 }
-
-
-# 보안 향상, 코드 재사용, 환경 구분 가능
-env = environ.Env(DEBUG=(bool, False))
-
-# 환경변수
-environ.Env.read_env(os.path.join(BASE_DIR, ".env"))
-
-# SECURITY를 .env로 이동하여 보호
-SECRET_KEY = env("DJANGO_SECRET_KEY")
