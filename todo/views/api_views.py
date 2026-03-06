@@ -182,6 +182,52 @@ class TodoListPagination(PageNumberPagination):
     # 사용자가 설정할 수 있는 최대 페이지 크기 제한
     # 예: page_size=100 요청 시 최대 50까지만 허용
 
+    def paginate_queryset(self, queryset, request, view=None):
+        # page_size=all 이면 전체 데이터를 한 번에 반환
+        if request.query_params.get(self.page_size_query_param) == "all":
+            self._all_items = list(queryset)
+            self._is_all = True
+            return self._all_items
+
+        self._is_all = False
+        return super().paginate_queryset(queryset, request, view)
+
+    def get_paginated_response(self, data):
+        import math
+
+        # page_size=all 요청인 경우
+        if getattr(self, "_is_all", False):
+            total = len(self._all_items)
+            return Response(
+                {
+                    "data": data,
+                    "page_size": total,
+                    "total_count": total,
+                    "page_count": 1,
+                    "current_page": 1,
+                    "next": None,
+                    "previous": None,
+                }
+            )
+
+        # 일반 페이지네이션 응답
+        total_count = self.page.paginator.count
+        page_size = self.get_page_size(self.request)
+        page_count = math.ceil(total_count / page_size) if page_size else 1
+        current_page = self.page.number
+
+        return Response(
+            {
+                "data": data,
+                "page_size": page_size,
+                "total_count": total_count,
+                "page_count": page_count,
+                "current_page": current_page,
+                "next": self.get_next_link(),
+                "previous": self.get_previous_link(),
+            }
+        )
+
 
 # ---------------------------------------
 # Todo ViewSet
