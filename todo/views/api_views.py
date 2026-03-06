@@ -1,11 +1,10 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from ..models import Todo  # 경로변경
-from ..serializers import TodoSerializer  # 경로변경
-
-# ViewSets 사용을 위한 DRF 모듈 import
+from ..models import Todo
+from ..serializers import TodoSerializer
 from rest_framework import viewsets
+from rest_framework.pagination import PageNumberPagination
 
 
 # 전체보기
@@ -179,3 +178,17 @@ class TodoViewSet(viewsets.ModelViewSet):
     serializer_class = TodoSerializer
     # Todo 데이터를 JSON으로 변환하거나
     # JSON 데이터를 검증/저장할 때 사용할 Serializer 지정
+
+
+class TodoListPagination(PageNumberPagination):
+
+    page_size = 3
+    # 한 페이지에 기본적으로 보여줄 데이터 개수
+
+    page_size_query_param = "page_size"
+    # URL 쿼리 파라미터로 페이지 크기 변경 가능
+    # 예: /todo/viewsets/view/?page_size=5
+
+    max_page_size = 50
+    # 사용자가 설정할 수 있는 최대 페이지 크기 제한
+    # 예: page_size=100 요청 시 최대 50까지만 허용
