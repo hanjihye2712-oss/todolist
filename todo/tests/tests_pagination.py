@@ -1,4 +1,5 @@
 from django.test import TestCase
+from django.contrib.auth.models import User
 from rest_framework.test import APIClient
 
 from ..models import Todo
@@ -34,6 +35,12 @@ class TodoPaginationTests(TestCase):
     def setUp(self):
         self.client = APIClient()
 
+        self.user = User.objects.create_user(username="testuser", password="pass1234")
+        # 테스트용 유저 생성
+
+        self.client.force_login(self.user)
+        # ViewSet이 IsAuthenticated이므로 로그인 처리
+
         # 총 7개의 Todo 생성 (기본 page_size=3 기준으로 3페이지 구성)
         for i in range(1, 8):
             Todo.objects.create(
@@ -41,6 +48,7 @@ class TodoPaginationTests(TestCase):
                 description=f"설명 {i}",
                 complete=False,
                 exp=i,
+                user=self.user,
             )
 
     # ---------------------------------------------------------

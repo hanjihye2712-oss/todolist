@@ -1,4 +1,5 @@
 from django.test import TestCase
+from django.contrib.auth.models import User
 from rest_framework.test import APIClient
 
 from ..models import Todo
@@ -30,11 +31,18 @@ class TodoViewSetCRUDTests(TestCase):
         self.base_url = "/todo/viewsets/view/"
         # ViewSet API 기본 URL
 
+        self.user = User.objects.create_user(username="testuser", password="pass1234")
+        # 테스트용 유저 생성
+
+        self.client.force_login(self.user)
+        # ViewSet이 IsAuthenticated이므로 로그인 처리
+
         self.todo = Todo.objects.create(
             name="운동",
             description="스쿼트 50회",
             complete=False,
             exp=10,
+            user=self.user,
         )
         # 테스트용 기본 Todo 데이터 생성
 

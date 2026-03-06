@@ -1,6 +1,7 @@
 import base64
 import io
 from django.test import TestCase
+from django.contrib.auth.models import User
 from django.core.files.uploadedfile import SimpleUploadedFile
 from rest_framework.test import APIClient
 from PIL import Image
@@ -24,12 +25,20 @@ class TodoImageTests(TestCase):
 
     def setUp(self):
         self.client = APIClient()
+
+        self.user = User.objects.create_user(username="testuser", password="pass1234")
+        # 테스트용 유저 생성
+
+        self.client.force_login(self.user)
+        # ViewSet이 IsAuthenticated이므로 로그인 처리
+
         # 기본 Todo 1개 생성 (이미지 없음)
         self.todo = Todo.objects.create(
             name="운동",
             description="스쿼트 50회",
             complete=False,
             exp=10,
+            user=self.user,
         )
 
     # -----------------------------------------------------
@@ -95,6 +104,7 @@ class TodoImageTests(TestCase):
             complete=False,
             exp=20,
             image=make_image("retrieve_test.png"),
+            user=self.user,
         )
 
         res = self.client.get(f"/todo/viewsets/view/{todo_with_img.id}/")
@@ -145,6 +155,8 @@ class TodoBase64ImageTests(TestCase):
 
     def setUp(self):
         self.client = APIClient()
+        self.user = User.objects.create_user(username="base64user", password="pass1234")
+        # test_base64_to_file_and_save에서 Todo 직접 생성 시 사용
 
     def make_base64_image(self):
         """PIL 이미지 → PNG 바이너리 → base64 문자열 변환"""
@@ -228,6 +240,7 @@ class TodoBase64ImageTests(TestCase):
             complete=False,
             exp=5,
             image=image_file,
+            user=self.user,
         )
 
         # DB에 저장됐는지 확인
