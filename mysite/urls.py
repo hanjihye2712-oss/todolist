@@ -6,8 +6,9 @@ from django.conf.urls.static import static
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path("", lambda request: redirect("todo:list")),  # 첫페이지가 무조건 보이게하기
     path("todo/", include("todo.urls")),
+    path("", lambda request: redirect("todo:list")),
+    path("", include("accounts.urls")),
 ]
 
 if settings.DEBUG:

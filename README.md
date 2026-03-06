@@ -14,7 +14,10 @@
 ![스크린샷](images/이미지삽입.png)
 ![스크린샷](images/test_img.png)
 
-
+## ★ 옵시디언 7번 회원가입 ★
+![스크린샷](images/login.png)
+![스크린샷](images/sigup.png)
+![스크린샷](images/test_accounts.png)
 ---
 
 # 🚀 todoList_Django_to_DRF
