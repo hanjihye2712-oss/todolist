@@ -8,7 +8,7 @@
 
 ## ★ 옵시디언 5번 pagination ★
 ![스크린샷](images/pagination.png)
-
+![스크린샷](images/test_pagination.png)
 ---
 
 # 🚀 todoList_Django_to_DRF
