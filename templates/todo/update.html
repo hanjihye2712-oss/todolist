@@ -25,6 +25,22 @@
     <input type="number" name="exp" id="exp" min="0" value="{{ todo.exp }}">
   </div>
 
+  <!-- [추가] 현재 이미지 미리보기 -->
+  <div>
+    <label>Current Image:</label><br>
+    {% if todo.image %}
+      <img src="{{ todo.image.url }}" alt="todo image" style="max-width:250px; height:auto;">
+    {% else %}
+      <p>-</p>
+    {% endif %}
+  </div>
+
+  <!-- [추가] 새 이미지 업로드 -->
+  <div>
+    <label for="image">New Image:</label>
+    <input type="file" id="image">
+  </div>
+
   <button type="button" id="todoUpdate">저장</button>
   <button type="button" onclick="history.back()">취소</button>
 </div>
@@ -79,6 +95,12 @@ document.getElementById("todoUpdate").addEventListener("click", async () => {
 
     formData.append("exp", document.getElementById("exp").value || 0);
     // exp 입력값 추가 (값이 없으면 0으로 설정)
+
+    // 새 이미지를 선택했을 경우에만 image 필드를 추가
+    const fileInput = document.getElementById("image");
+    if (fileInput.files.length > 0) {
+      formData.append("image", fileInput.files[0]);
+    }
 
     const res = await api.patch(`/todo/viewsets/view/${todoId}/`, formData);
     // PATCH 요청으로 Todo 데이터 수정 API 호출

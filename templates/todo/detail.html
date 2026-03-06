@@ -7,6 +7,14 @@
   <p><strong>설명:</strong> {{ todo.description }}</p>
   <p><strong>완료 여부:</strong> {{ todo.complete }}</p>
   <p><strong>작성일:</strong> {{ todo.created_at }}</p>
+
+  <!-- [추가됨] 이미지 출력 -->
+  {% if todo.image %}
+    <p><strong>이미지:</strong></p>
+    <img src="{{ todo.image.url }}" alt="todo image" style="max-width:300px; height:auto;">
+  {% else %}
+    <p><strong>이미지:</strong> -</p>
+  {% endif %}
 </div>
 <div class="btnList">
   <button class="todoUpdate">수정</button>

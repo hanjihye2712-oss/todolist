@@ -9,6 +9,12 @@
 ## ★ 옵시디언 5번 pagination ★
 ![스크린샷](images/pagination.png)
 ![스크린샷](images/test_pagination.png)
+
+## ★ 옵시디언 6번 이미지삽입 ★
+![스크린샷](images/이미지삽입.png)
+![스크린샷](images/test_img.png)
+
+
 ---
 
 # 🚀 todoList_Django_to_DRF

@@ -24,6 +24,12 @@
       <input type="number" name="exp" id="exp" min="0">
     </div>
 
+    <!-- [추가됨] 이미지 업로드 필드 -->
+    <div>
+      <label for="image">Image:</label>
+      <input type="file" id="image">
+    </div>
+
     <button type="submit" id="todoCreate">Create</button>
 </div>
 
@@ -34,11 +40,7 @@
 const api = axios.create({
   baseURL: "/",
   // 모든 API 요청의 기본 URL
-
-  headers: {
-    "Content-Type": "application/json",
-    // 서버로 보낼 데이터 형식 지정 (JSON)
-  }
+  // multipart/form-data는 브라우저가 자동으로 Content-Type을 생성하므로 직접 지정하지 않는다
 });
 
 // CSRF 자동 주입 (Django 필수)
@@ -65,21 +67,21 @@ document.getElementById("todoCreate").addEventListener("click", async () => {
 
   try { // 에러가 발생할 수 있는 코드를 실행하는 영역
 
-    const res = await api.post("todo/viewsets/view/", {
-      // Todo 생성 API로 POST 요청 전송
+    // FormData 객체 생성 (파일 업로드를 포함한 데이터 전송)
+    const formData = new FormData();
+    formData.append("name", document.getElementById("name").value);
+    formData.append("description", document.getElementById("description").value);
+    formData.append("complete", document.getElementById("complete").checked);
+    formData.append("exp", document.getElementById("exp").value || 0);
 
-      name: document.getElementById("name").value,
-      // 입력한 Todo 이름
+    // 이미지 파일이 선택되어 있으면 FormData에 추가
+    const fileInput = document.getElementById("image");
+    if (fileInput.files.length > 0) {
+      formData.append("image", fileInput.files[0]);
+    }
 
-      description: document.getElementById("description").value,
-      // 입력한 설명
-
-      complete: document.getElementById("complete").checked,
-      // 체크박스 상태 (true / false)
-
-      exp: Number(document.getElementById("exp").value || 0)
-      // 경험치 입력값 (숫자로 변환, 없으면 0)
-    });
+    const res = await api.post("todo/viewsets/view/", formData);
+    // FormData 형태로 서버에 전송
 
     console.log(res.data);
     // 서버에서 받은 응답 데이터 출력
