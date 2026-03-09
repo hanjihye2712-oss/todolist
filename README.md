@@ -18,6 +18,11 @@
 ![스크린샷](images/login.png)
 ![스크린샷](images/sigup.png)
 ![스크린샷](images/test_accounts.png)
+
+## ★ 옵시디언 9번 JWT ★
+![스크린샷](images/1.png)
+![스크린샷](images/2.png)
+![스크린샷](images/3.png)
 ---
 
 # 🚀 todoList_Django_to_DRF
