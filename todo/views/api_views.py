@@ -141,14 +141,18 @@ class TodoViewSet(viewsets.ModelViewSet):
             return Response(
                 {
                     "data": serializer.data,
+                    # 현재 페이지에 포함된 데이터 개수
+                    "page_size": len(serializer.data),
+                    # 전체 데이터 개수
+                    "total_count": self.paginator.page.paginator.count,
                     # 현재 페이지
-                    "current_page": int(request.query_params.get("page", 1)),
+                    "current_page": self.paginator.page.number,
                     # 전체 페이지 수
                     "page_count": self.paginator.page.paginator.num_pages,
-                    # 다음 페이지 존재 여부
-                    "next": self.paginator.get_next_link() is not None,
-                    # 이전 페이지 존재 여부
-                    "previous": self.paginator.get_previous_link() is not None,
+                    # 다음 페이지 URL (없으면 None)
+                    "next": self.paginator.get_next_link(),
+                    # 이전 페이지 URL (없으면 None)
+                    "previous": self.paginator.get_previous_link(),
                 }
             )
 
@@ -164,10 +168,12 @@ class TodoViewSet(viewsets.ModelViewSet):
         return Response(
             {
                 "data": serializer.data,
+                "page_size": len(serializer.data),
+                "total_count": len(serializer.data),
                 "current_page": 1,
                 "page_count": 1,
-                "next": False,
-                "previous": False,
+                "next": None,
+                "previous": None,
             }
         )
 

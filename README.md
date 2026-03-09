@@ -27,6 +27,7 @@
 
 ## ★ 옵시디언 10번 인터렉티브 ★
 ![스크린샷](images/5.png)
+
 ---
 
 # 🚀 todoList_Django_to_DRF
