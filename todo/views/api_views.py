@@ -3,11 +3,13 @@
 # ---------------------------------------------------------
 # .. 는 상위 디렉토리를 의미합니다.
 # 즉 todo 앱의 models.py 에서 정의된 모델을 가져옵니다.
+from django.db.models import Q
 from rest_framework.views import APIView
 from rest_framework import viewsets
 from rest_framework.response import Response
 from ..models import Todo
 from ..serializers import TodoSerializer
+from ..pagination import CustomPageNumberPagination
 from interaction.models import TodoLike, TodoBookmark, TodoComment
 
 
@@ -22,7 +24,7 @@ from interaction.models import TodoLike, TodoBookmark, TodoComment
 # → API 접근 권한을 제어
 # → 로그인 필요 / 누구나 가능 등을 설정
 from rest_framework.decorators import action
-from rest_framework.permissions import IsAuthenticated, AllowAny
+from rest_framework.permissions import IsAuthenticated
 
 
 # ---------------------------------------------------------
@@ -74,28 +76,30 @@ class TodoDeleteAPI(APIView):
 class TodoViewSet(viewsets.ModelViewSet):
 
     # -----------------------------------------------------
-    # 기본 queryset
-    # -----------------------------------------------------
-    # Todo 테이블 전체 데이터를 가져옵니다.
-    # created_at 기준으로 최신순 정렬
-    queryset = Todo.objects.all().order_by("-created_at")
-
-    # -----------------------------------------------------
     # serializer 지정
     # -----------------------------------------------------
-    # 데이터 → JSON 변환
-    # JSON → 데이터 검증 및 저장
     serializer_class = TodoSerializer
 
     # -----------------------------------------------------
     # 기본 permission
     # -----------------------------------------------------
-    # AllowAny
-    # → 로그인하지 않아도 조회 가능
-    #
-    # 즉
-    # list / retrieve 는 누구나 가능
-    permission_classes = [AllowAny]
+    # 로그인한 사용자만 접근 가능
+    permission_classes = [IsAuthenticated]
+
+    # -----------------------------------------------------
+    # 페이지네이션
+    # -----------------------------------------------------
+    pagination_class = CustomPageNumberPagination
+
+    # -----------------------------------------------------
+    # queryset
+    # -----------------------------------------------------
+    # 공개 Todo 또는 내 Todo만 조회
+    def get_queryset(self):
+        user = self.request.user
+        return Todo.objects.filter(Q(is_public=True) | Q(user=user)).order_by(
+            "-created_at"
+        )
 
     # -----------------------------------------------------
     # list API 커스터마이징

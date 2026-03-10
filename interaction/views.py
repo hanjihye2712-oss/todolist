@@ -145,6 +145,7 @@ class TodoCommentCreateAPIView(APIView):
 # GET /interaction/comment/<todo_id>/
 # =========================================================
 class TodoCommentListAPIView(APIView):
+    permission_classes = [IsAuthenticated]
 
     def get(self, request, todo_id):
 

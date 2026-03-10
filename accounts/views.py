@@ -38,3 +38,16 @@ class SessionLogoutAPIView(APIView):
     def post(self, request):
         logout(request)
         return Response({"detail": "로그아웃(세션 정리)"}, status=status.HTTP_200_OK)
+
+
+class MeAPIView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        return Response(
+            {
+                "id": request.user.id,
+                "username": request.user.username,
+                "email": request.user.email,
+            }
+        )

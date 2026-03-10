@@ -1,93 +1,53 @@
 {% extends "base.html" %}
 {% load static %}
 {% block content %}
-<div class="container">
+<div class="cre_container">
   <h2>Create a New Todo</h2>
-    <div>
-      <label for="name">Name:</label>
-      <input type="text" name="name" id="name">
-    </div>
 
-    <div>
-      <label for="description">Description:</label>
-      <textarea name="description" id="description"></textarea>
-    </div>
+  <div>
+    <label for="name">Name:</label>
+    <input type="text" name="name" id="name">
+  </div>
 
-    <div>
-      <label for="complete">Complete:</label>
-      <input type="checkbox" name="complete" id="complete">
-    </div>
+  <div>
+    <label for="description">Description:</label>
+    <textarea name="description" id="description"></textarea>
+  </div>
 
-    <div>
-      <label for="exp">Experience Points:</label>
-      <input type="number" name="exp" id="exp" min="0">
-    </div>
+  <div>
+    <label for="complete">Complete:</label>
+    <input type="checkbox" name="complete" id="complete">
+  </div>
 
-    <div>
-      <label for="image">Image:</label>
-      <input type="file" id="image">
-    </div>
+  <div>
+    <label for="exp">Experience Points:</label>
+    <input type="number" name="exp" id="exp" min="0">
+  </div>
 
-    <button type="submit" id="todoCreate">Create</button>
+  <div>
+    <label for="image">Image:</label>
+    <input type="file" id="image">
+  </div>
+
+  <button type="submit" id="todoCreate">Create</button>
 </div>
 
 <script>
 document.addEventListener("DOMContentLoaded", () => {
-
-  // (유지) 로그인 페이지 / 생성 API URL
+  // ======================================================
+  // 0) 기본 설정
+  // ======================================================
   const LOGIN_PAGE_URL = "/login/";
   const CREATE_API_URL = "/todo/viewsets/view/";
 
-  // ✅ [삭제됨] 기존: 세션 쿠키 기반 axios 인스턴스 생성
-  /*
-  const api = axios.create({
-    baseURL: "/",
-    withCredentials: true,
-  });
-  */
-
-  // ✅ [삭제됨] 기존: CSRF 자동 주입 (세션 기반에서 필요)
-  /*
-  api.interceptors.request.use((config) => {
-    const csrfToken = document.cookie
-      .split("; ")
-      .find(row => row.startsWith("csrftoken="))
-      ?.split("=")[1];
-
-    config.headers = config.headers || {};
-    if (csrfToken) {
-      config.headers["X-CSRFToken"] = csrfToken;
-    }
-    return config;
-  });
-  */
-
-  // ✅ [삭제됨] 기존: response interceptor로 401/403이면 로그인으로 이동
-  /*
-  api.interceptors.response.use(
-    (res) => res,
-    async (err) => {
-      const status = err.response?.status;
-
-      if (status === 401 || status === 403) {
-        console.log("세션 없음/권한 없음 → 로그인 이동");
-        window.location.href = LOGIN_PAGE_URL;
-        return Promise.reject(err);
-      }
-      return Promise.reject(err);
-    }
-  );
-  */
-
-  // [수정됨] 이제 세션 기반 api가 아니라, 공통 axios 인스턴스(window.api) 사용
-  // 3단계: 공통 axios 인스턴스(window.api) 사용
-  if (!window.api) { // [추가됨] window.api 로드 여부 확인
-    console.error("window.api가 없습니다. base.html에서 static/js/api.js가 로드됐는지 확인하세요.");
+  // axios 인스턴스(window.api) 확인
+  if (!window.api) {
+    console.error("window.api가 없습니다. base.html에서 static/js/api.js 로드 확인");
     alert("설정 오류: api.js가 로드되지 않았습니다.");
     return;
   }
 
-  // [추가됨] access 토큰이 없으면 바로 로그인으로(선택)
+  // access_token 없으면 로그인으로
   const access = localStorage.getItem("access_token");
   if (!access) {
     console.log("access_token 없음 → 로그인 이동");
@@ -95,7 +55,10 @@ document.addEventListener("DOMContentLoaded", () => {
     return;
   }
 
-  // [추가됨] 401/403 처리 로직을 함수로 분리 (기존 interceptor 대체)
+  // ======================================================
+  // 1) 공통 헬퍼
+  // ======================================================
+  // 인증 실패(401/403) → 토큰 삭제 후 로그인 이동
   function handleAuthError(err) {
     const status = err.response?.status;
     if (status === 401 || status === 403) {
@@ -107,43 +70,51 @@ document.addEventListener("DOMContentLoaded", () => {
     return Promise.reject(err);
   }
 
-  // (유지) Create 버튼 클릭 → FormData 전송
+  // FormData 생성
+  function buildFormData() {
+    const formData = new FormData();
+
+    formData.append("name", document.getElementById("name").value.trim());
+    formData.append("description", document.getElementById("description").value.trim());
+    formData.append("complete", document.getElementById("complete").checked ? "true" : "false");
+    formData.append("exp", document.getElementById("exp").value || "0");
+
+    const fileInput = document.getElementById("image");
+    if (fileInput.files && fileInput.files.length > 0) {
+      formData.append("image", fileInput.files[0]);
+    }
+
+    formData.append("is_public", "true");
+
+    return formData;
+  }
+
+  // ======================================================
+  // 2) 이벤트 처리
+  // ======================================================
   document.getElementById("todoCreate").addEventListener("click", async (e) => {
     e.preventDefault();
 
     try {
-      const formData = new FormData();
+      const formData = buildFormData();
 
-      formData.append("name", document.getElementById("name").value);
-      formData.append("description", document.getElementById("description").value);
-      formData.append("complete", document.getElementById("complete").checked ? "true" : "false");
-      formData.append("exp", document.getElementById("exp").value || "0");
-
-      const fileInput = document.getElementById("image");
-      if (fileInput.files.length > 0) {
-        formData.append("image", fileInput.files[0]);
-      }
-
-      // [수정됨] 기존: api.post(...) → 세션 기반
-      // const res = await api.post(CREATE_API_URL, formData); // ❌ [삭제됨]
-
-      // [수정됨] 변경: window.api.post(...) → JWT 기반
-      // JWT: Authorization은 api.js가 자동으로 붙임 (설명 주석 추가됨)
-      // FormData일 때 Content-Type은 axios가 자동 설정하도록 헤더 지정하지 않는 게 안전 (설명 주석 추가됨)
-      const res = await window.api.post(CREATE_API_URL, formData); // ✅ 변경
+      // FormData일 때 Content-Type은 axios가 자동 설정하므로 헤더를 따로 건드리지 않음
+      const res = await window.api.post(CREATE_API_URL, formData);
 
       console.log("생성 성공:", res.data);
       window.location.href = "/todo/list/";
-
     } catch (err) {
-      // ✅ [추가됨] 인증 문제면 로그인으로 보내기
       handleAuthError(err).catch(() => {});
-
       console.error("생성 실패:", err.response?.data || err.message);
       alert("생성 실패: 콘솔/네트워크 확인");
     }
   });
 
+  // ======================================================
+  // 3) 초기화(선택)
+  // ======================================================
+  // 필요하면 여기서 기본값 세팅/포커스 처리 가능
+  // document.getElementById("name").focus();
 });
 </script>
 {% endblock %}

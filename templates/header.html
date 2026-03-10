@@ -35,7 +35,7 @@
 <hr>
 
 <script>
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
 
   // ✅ [추가됨] 토큰 키 상수화 (다른 페이지들과 통일)
   const ACCESS_KEY = "access_token";
@@ -61,10 +61,17 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // ✅ [추가됨] 토큰 있으면: 로그아웃/환영 표시 + 로그인/회원가입 숨김
   if (access) {
-    // ✅ [수정됨] 기존: "{{ request.user.username }}님 환영합니다"를 서버가 출력
-    // ✅ 변경: (3단계에서는 username을 토큰에서 꺼내지 않으므로) 일단 "로그인됨" 표시
-    // (3단계에서는 username까지는 안 뽑아도 됨 — 7단계에서 정리)
-    welcomeEl.textContent = "로그인됨";
+    try {
+      const res = await window.api.get("/me/");
+      const user = res.data;
+      welcomeEl.textContent = `${user.username}님 환영합니다`;
+    } catch (err) {
+      console.error("유저 정보 불러오기 실패", err);
+      localStorage.removeItem(ACCESS_KEY);
+      localStorage.removeItem(REFRESH_KEY);
+      window.location.href = "/login/";
+      return;
+    }
     welcomeEl.style.display = "inline-block";
     logoutBtn.style.display = "inline-block";
 
