@@ -39,6 +39,7 @@
 
 ## ★ 옵시디언 13번 PostgreSQL ★
 ![스크린샷](images/11.png)
+![스크린샷](images/12.png)
 ---
 
 # 🚀 todoList_Django_to_DRF

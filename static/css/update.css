@@ -17,10 +17,13 @@
 }
 
 .cre_container{
+  width: min(980px, 92vw);
   margin: 24px auto 56px;
-  display:grid;
-  grid-template-columns: 1fr;
-  gap:16px;
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 18px;
+  padding: 22px;
+  box-shadow: 0 10px 30px rgba(17, 24, 39, 0.06);
 }
 
 

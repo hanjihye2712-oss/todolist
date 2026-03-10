@@ -2,8 +2,8 @@
 {% load static %}
 {% block css %}<link rel="stylesheet" href="{% static 'css/update.css' %}">{% endblock %}
 {% block content %}
-<div class="cre_container">
-  <h2>Create a New Todo</h2>
+<div class="container">
+  <h2>Todo 등록</h2>
 
   <div>
     <label for="name">Name:</label>
@@ -30,7 +30,8 @@
     <input type="file" id="image">
   </div>
 
-  <button type="submit" id="todoCreate">Create</button>
+  <button type="button" id="todoCreate">등록</button>
+  <button type="button" onclick="history.back()">취소</button>
 </div>
 
 <script>
